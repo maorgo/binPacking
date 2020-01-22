@@ -1,6 +1,6 @@
 class binPacking {
     static void main(String[] args) {
-        def bucketCapacity = 15
+        def bucketRunningLimit = 15
         Map classesToRunningTime = [
                 "class1": 5,
                 "class2": 1,
@@ -13,15 +13,49 @@ class binPacking {
                 "class9": 0
         ]
 
-        List<TestClass> classesToAttach = getSortedTestClasses(classesToRunningTime)
-        List<Bucket> buckets = firstFit(classesToAttach, bucketCapacity)
-        printBucketsResult(buckets)
-
-
+        List<TestClass> classesToAttach = getDescendingOrderTestClasses(classesToRunningTime)
+        List<Bucket> buckets = firstFit(classesToAttach, bucketRunningLimit)
+        printBucketsResult(buckets, bucketRunningLimit)
     }
 
-    private static void printBucketsResult(List<Bucket> buckets) {
-        println("Total buckets: " + buckets.size())
+    private static List<TestClass> getDescendingOrderTestClasses(LinkedHashMap<String, Integer> classesToRunningTime) {
+        List<TestClass> classesToAttach = []
+
+        for (entry in classesToRunningTime) {
+            TestClass testClass = new TestClass(entry.key, entry.value)
+            classesToAttach.add(testClass)
+        }
+
+        return classesToAttach.sort { -it.runTime }
+    }
+
+    private static List<Bucket> firstFit(List<TestClass> classesToAttach, int bucketCapacity) {
+        List<Bucket> bucketList = []
+
+        for (int i = 0; i < classesToAttach.size(); i++) {
+            TestClass currentClass = classesToAttach[i]
+            boolean isClassMatched = false
+            int j
+            for (j = 0; j < bucketList.size(); j++) {
+
+                if (bucketList[j].remainingBinSpace >= currentClass.runTime) {
+                    bucketList[j].add(currentClass)
+                    isClassMatched = true
+                    break
+                }
+            }
+
+            if (!isClassMatched) {
+                Bucket newBucket = new Bucket(bucketCapacity)
+                newBucket.add(currentClass)
+                bucketList.add(newBucket)
+            }
+        }
+        return bucketList
+    }
+
+    private static void printBucketsResult(List<Bucket> buckets, int runningLimit) {
+        println("Total buckets: " + buckets.size() + " with running time limit: " + runningLimit)
         for (Bucket bucket : buckets) {
             println("**** New bucket run time: " + bucket.totalRunTime)
             println(bucket.attachedClasses.size() + " classes")
@@ -29,38 +63,5 @@ class binPacking {
                 println(className)
             }
         }
-    }
-
-    private static List<TestClass> getSortedTestClasses(LinkedHashMap<String, Integer> classesToRunningTime) {
-        List<TestClass> classesToAttach = []
-
-        for (entry in classesToRunningTime) {
-            TestClass testClass = [entry.key, entry.value]
-            classesToAttach.add(testClass)
-        }
-
-        classesToAttach.sort { -it.runTime }
-        classesToAttach
-    }
-
-    static def firstFit(List<TestClass> classesToAttach, int bucketCapacity) {
-        List<Bucket> bucketList = []
-
-        for (int i = 0; i < classesToAttach.size(); i++) {
-            int j
-            for (j = 0; j < bucketList.size(); j++) {
-                if (bucketList[j].remainingBinSpace >= classesToAttach[i].runTime) {
-                    bucketList[j].add(classesToAttach[i])
-                    break
-                }
-            }
-
-            if (j == bucketList.size()) {
-                Bucket newBucket = [bucketCapacity]
-                newBucket.add(classesToAttach[i])
-                bucketList.add(newBucket)
-            }
-        }
-        return bucketList
     }
 }
