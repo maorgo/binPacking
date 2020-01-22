@@ -1,6 +1,6 @@
 class binPacking {
     static void main(String[] args) {
-        def bucketRunningLimit = 15
+        def bucketRunningLimit = 15 * 60
         Map classesToRunningTime = [
                 "class1": 5,
                 "class2": 1,
