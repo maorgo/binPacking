@@ -14,8 +14,8 @@ class binPacking {
         ]
 
         List<TestClass> classesToAttach = getDescendingOrderTestClasses(classesToRunningTime)
-        List<Bucket> buckets = firstFit(classesToAttach, bucketRunningLimit)
-        printBucketsResult(buckets, bucketRunningLimit)
+        List<Bucket> buckets = firstFit(classesToAttach, bucketRunningLimitInSeconds)
+        printBucketsResult(buckets, bucketRunningLimitInSeconds)
     }
 
     private static List<TestClass> getDescendingOrderTestClasses(LinkedHashMap<String, Integer> classesToRunningTime) {
