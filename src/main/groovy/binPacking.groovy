@@ -55,9 +55,9 @@ class binPacking {
     }
 
     private static void printBucketsResult(List<Bucket> buckets, int runningLimit) {
-        println("Total buckets: " + buckets.size() + " with running time limit: " + runningLimit)
+        println("Total buckets: " + buckets.size() + " with running time limit: " + runningLimit + " seconds")
         for (Bucket bucket : buckets) {
-            println("**** New bucket run time: " + bucket.totalRunTime)
+            println("**** New bucket run time: " + bucket.totalRunTime + " seconds")
             println(bucket.attachedClasses.size() + " classes")
             for (String className : bucket.attachedClasses) {
                 println(className)
