@@ -12,17 +12,43 @@ class binPacking {
                 "class9": 5
         ]
 
-        def bucketCapacity = 15
+        List<TestClass> classesToAttach = []
 
-        classesToRunningTime.sort { it.value }
-        .forEach {
-            k, v -> println "${k}:${v}"
+        for (entry in classesToRunningTime) {
+            TestClass testClass = [entry.key, entry.value]
+            classesToAttach.add(testClass)
         }
 
+        List<TestClass> sortedTestClassList = classesToAttach.sort { it.runTime }
+
+        def bucketCapacity = 15
+        print(sortedTestClassList.size())
+
+
+
     }
 
-    def firstFit(Map classesToRunTime) {
+    static def firstFit(List<TestClass> classesToAttach, int bucketCapacity) {
+        List<Bucket> bucketList = []
 
+        List<Integer> remainingBinSpace = []
+
+        for (int i = 0; i < classesToAttach.size(); i++) {
+            int j
+            for (j = 0; j < bucketList.size(); j++) {
+                if (remainingBinSpace[j] >= classesToAttach[i].runTime) {
+                    remainingBinSpace[j] = remainingBinSpace[j] - classesToAttach[i].runTime
+                    bucketList.add()
+                    break
+                }
+            }
+
+            if (j == bucketList.size()) {
+                Bucket newBucket = []
+                newBucket.add(classesToAttach[i])
+                bucketList.add(newBucket)
+                remainingBinSpace[j] = bucketCapacity - classesToAttach[i].runTime
+            }
+        }
     }
-
 }
