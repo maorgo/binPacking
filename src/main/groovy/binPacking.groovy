@@ -1,15 +1,15 @@
 class binPacking {
     static void main(String[] args) {
         Map classesToRunningTime = [
-                "class1": 4,
-                "class2": 2,
-                "class3": 5,
-                "class4": 4,
+                "class1": 5,
+                "class2": 1,
+                "class3": 15,
+                "class4": 14,
                 "class5": 2,
-                "class6": 5,
-                "class7": 4,
-                "class8": 2,
-                "class9": 5
+                "class6": 9,
+                "class7": 10,
+                "class8": 0,
+                "class9": 0
         ]
 
         List<TestClass> classesToAttach = []
@@ -19,10 +19,19 @@ class binPacking {
             classesToAttach.add(testClass)
         }
 
-        List<TestClass> sortedTestClassList = classesToAttach.sort { it.runTime }
+        List<TestClass> sortedTestClassList = classesToAttach.sort { -it.runTime }
 
         def bucketCapacity = 15
-        firstFit(sortedTestClassList, bucketCapacity)
+        List<Bucket> buckets = firstFit(sortedTestClassList, bucketCapacity)
+
+        println("Total buckets: " + buckets.size())
+        for (Bucket bucket: buckets) {
+            println("**** New bucket run time: " + bucket.totalRunTime)
+            println(bucket.attachedClasses.size() + " classes")
+            for (String className: bucket.attachedClasses) {
+                println(className)
+            }
+        }
 
 
     }
@@ -34,9 +43,9 @@ class binPacking {
             int j
             for (j = 0; j < bucketList.size(); j++) {
                 if (bucketList[j].remainingBinSpace >= classesToAttach[i].runTime) {
-                    double remainingBinSpace = bucketList[j].remainingBinSpace - classesToAttach[i].runTime
-                    bucketList[j].setRemainingBinSpace(remainingBinSpace)
-                    bucketList.add()
+//                    double remainingBinSpace = bucketList[j].remainingBinSpace - classesToAttach[i].runTime
+//                    bucketList[j].setRemainingBinSpace(remainingBinSpace)
+                    bucketList[j].add(classesToAttach[i])
                     break
                 }
             }

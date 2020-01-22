@@ -1,5 +1,5 @@
 class Bucket {
-    def attachedClasses = []
+    List<String> attachedClasses = []
     double totalRuntime = 0
     double remainingBinSpace = 0
 
