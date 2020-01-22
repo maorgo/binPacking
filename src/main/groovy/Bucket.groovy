@@ -16,4 +16,9 @@ class Bucket {
     double getTotalRunTime() {
         return totalRuntime;
     }
+
+    double getRemainingBinSpace() {
+        return remainingBinSpace
+    }
+
 }
