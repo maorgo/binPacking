@@ -1,5 +1,5 @@
 public class TestClass {
-    public TestClass(String className, double runTime) {
+    TestClass(String className, double runTime) {
         this.className = className
         this.runTime = runTime
     }

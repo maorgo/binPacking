@@ -1,28 +1,66 @@
 class binPacking {
     static void main(String[] args) {
+        def bucketCapacity = 15
         Map classesToRunningTime = [
-                "class1": 4,
-                "class2": 2,
-                "class3": 5,
-                "class4": 4,
+                "class1": 5,
+                "class2": 1,
+                "class3": 15,
+                "class4": 14,
                 "class5": 2,
-                "class6": 5,
-                "class7": 4,
-                "class8": 2,
-                "class9": 5
+                "class6": 9,
+                "class7": 10,
+                "class8": 0,
+                "class9": 0
         ]
 
-        def bucketCapacity = 15
+        List<TestClass> classesToAttach = getSortedTestClasses(classesToRunningTime)
+        List<Bucket> buckets = firstFit(classesToAttach, bucketCapacity)
+        printBucketsResult(buckets)
 
-        classesToRunningTime.sort { it.value }
-        .forEach {
-            k, v -> println "${k}:${v}"
+
+    }
+
+    private static void printBucketsResult(List<Bucket> buckets) {
+        println("Total buckets: " + buckets.size())
+        for (Bucket bucket : buckets) {
+            println("**** New bucket run time: " + bucket.totalRunTime)
+            println(bucket.attachedClasses.size() + " classes")
+            for (String className : bucket.attachedClasses) {
+                println(className)
+            }
+        }
+    }
+
+    private static List<TestClass> getSortedTestClasses(LinkedHashMap<String, Integer> classesToRunningTime) {
+        List<TestClass> classesToAttach = []
+
+        for (entry in classesToRunningTime) {
+            TestClass testClass = [entry.key, entry.value]
+            classesToAttach.add(testClass)
         }
 
+        classesToAttach.sort { -it.runTime }
+        classesToAttach
     }
 
-    def firstFit(Map classesToRunTime) {
+    static def firstFit(List<TestClass> classesToAttach, int bucketCapacity) {
+        List<Bucket> bucketList = []
 
+        for (int i = 0; i < classesToAttach.size(); i++) {
+            int j
+            for (j = 0; j < bucketList.size(); j++) {
+                if (bucketList[j].remainingBinSpace >= classesToAttach[i].runTime) {
+                    bucketList[j].add(classesToAttach[i])
+                    break
+                }
+            }
+
+            if (j == bucketList.size()) {
+                Bucket newBucket = [bucketCapacity]
+                newBucket.add(classesToAttach[i])
+                bucketList.add(newBucket)
+            }
+        }
+        return bucketList
     }
-
 }
